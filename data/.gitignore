@@ -1,2 +1,2 @@
-cnn_model
-dataset
+*
+!.gitignore
