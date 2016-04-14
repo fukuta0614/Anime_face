@@ -33,7 +33,7 @@ class AnimeFaceDataset:
                         abs_name = self.original_dataset_path+dir_name+'/'+file_name
                         # read class id i.e., target
                         image = Image.open(abs_name)
-                        image = np.array(image.resize((64,64))).transpose(2,0,1)
+                        image = np.array(image.resize((64,64)), np.float32).transpose(2,0,1)
                         image /= 255.
                         if image.shape != (3,64,64):
                             continue
