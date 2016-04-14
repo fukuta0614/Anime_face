@@ -33,7 +33,7 @@ class AnimeFaceDataset:
                         abs_name = self.original_dataset_path+dir_name+'/'+file_name
                         # read class id i.e., target
                         image = Image.open(abs_name)
-                        image = np.asarray(image.resize((64,64))).transpose(2,0,1)
+                        image = np.array(image.resize((64,64)), np.float32).transpose(2,0,1)
                         image /= 255.
                         if image.shape != (3,64,64):
                             continue
@@ -86,3 +86,6 @@ class AnimeFaceDataset:
     def load_dataset(self):
         self.data, self.target, self.index2name = pickle.load(open(self.dataset_path, 'rb'))
 
+if __name__ == '__main__':
+    dataset = AnimeFaceDataset()
+    dataset.load_data_target()
