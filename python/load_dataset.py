@@ -86,3 +86,6 @@ class AnimeFaceDataset:
     def load_dataset(self):
         self.data, self.target, self.index2name = pickle.load(open(self.dataset_path, 'rb'))
 
+if __name__ == '__main__':
+    dataset = AnimeFaceDataset()
+    dataset.load_data_target()
