@@ -7,6 +7,7 @@ import numpy as np
 class AnimeFaceDataset:
     def __init__(self):
         self.original_dataset_path = u"../data/animeface-character-dataset/thumb/"
+        self.dir_list = []
         self.data = None
         self.target = None
         self.index2name = {}
@@ -21,38 +22,43 @@ class AnimeFaceDataset:
             if not os.path.exists(self.original_dataset_path):
                 self.fetch_animeface_dataset()
 
-            dir_list = self.get_dir_list()
-            self.target = []
-            target_name = []
-            self.data = []
-            for dir_name in dir_list:
-                file_list = os.listdir(self.original_dataset_path+dir_name)
+            target=[]
+            data=[]
+            index = 0
+            for x in os.listdir(self.original_dataset_path):
+                dir_path = self.original_dataset_path+x
+                if not os.path.isdir(dir_path):
+                    continue
+                target_name = x[4:]
+                print(target_name)
+                file_list = os.listdir(dir_path)
+                image_exists = False
                 for file_name in file_list:
                     root, ext = os.path.splitext(file_name)
                     if ext == u'.png':
-                        abs_name = self.original_dataset_path+dir_name+'/'+file_name
+                        abs_name = dir_path+'/'+file_name
                         # read class id i.e., target
                         image = Image.open(abs_name)
                         image = np.array(image.resize((64,64)), np.float32).transpose(2,0,1)
                         image /= 255.
                         if image.shape != (3,64,64):
                             continue
-                        class_id = self.get_class_id(abs_name)
-                        self.target.append(class_id)
-                        target_name.append(str(dir_name))
-                        self.data.append(image)
 
-            for i in xrange(len(self.target)):
-                self.index2name[self.target[i]] = target_name[i]
+                        target.append(index)
+                        data.append(image)
+                        image_exists = True
+                if image_exists:
+                    self.index2name[index] = target_name
+                    index += 1
 
-        # print(self.data)
-        self.data = np.array(self.data, np.float32)
-        self.target = np.array(self.target, np.int32)
+            # print(self.data)
+            self.data = np.array(data, np.float32)
+            self.target = np.array(target, np.int32)
 
-        self.dump_dataset()
+            self.dump_dataset()
 
     def fetch_animeface_dataset(self):
-        subprocess.call('wget http://www.nurs.or.jp/\~nagadomi/animeface-character-dataset/data/animeface-character-dataset.zip', shell=True)
+        subprocess.call('wget -p ../data/ http://www.nurs.or.jp/\~nagadomi/animeface-character-dataset/data/animeface-character-dataset.zip', shell=True)
         subprocess.call('unzip animeface-character-dataset.zip', shell=True)
         subprocess.call('rm animeface-character-dataset.zip', shell=True)
 
