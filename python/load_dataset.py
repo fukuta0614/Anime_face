@@ -58,9 +58,11 @@ class AnimeFaceDataset:
             self.dump_dataset()
 
     def fetch_animeface_dataset(self):
-        subprocess.call('wget -p ../data/ http://www.nurs.or.jp/\~nagadomi/animeface-character-dataset/data/animeface-character-dataset.zip', shell=True)
+        os.chdir('../data/')
+        subprocess.call('wget http://www.nurs.or.jp/\~nagadomi/animeface-character-dataset/data/animeface-character-dataset.zip', shell=True)
         subprocess.call('unzip animeface-character-dataset.zip', shell=True)
         subprocess.call('rm animeface-character-dataset.zip', shell=True)
+        os.chdir('../python/')
 
     def get_dir_list(self):
         tmp = os.listdir(self.original_dataset_path)

@@ -33,7 +33,7 @@ class ImageNet(chainer.Chain):
             x_data = cuda.to_gpu(x_data)
 
         x = Variable(x_data)
-        h = F.max_pooling_2d(F.relu(self.conv1(x)), ksize=3, stride=3)
+        h = F.max_pooling_2d(F.relu(self.conv1(x)), ksize=2, stride=2)
         h = F.max_pooling_2d(F.relu(self.conv2(h)), ksize=3, stride=3)
         h = F.dropout(F.relu(self.l3(h)), train=False)
         y = self.l4(h)
